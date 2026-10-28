@@ -1,0 +1,59 @@
+﻿@model SistemaDeCitasVeterinarias.Models.Cita
+
+@{
+    ViewData["Title"] = "Nueva cita";
+}
+
+<h2 class="mb-4">Nueva cita</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="AgendarCita" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="MascotaId" class="form-label">Mascota</label>
+                <select asp-for="MascotaId" asp-items="ViewBag.MascotaId" class="form-select">
+                    <option value="">-- Seleccione --</option>
+                </select>
+                <span asp-validation-for="MascotaId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="VeterinarioId" class="form-label">Veterinario</label>
+                <select asp-for="VeterinarioId" asp-items="ViewBag.VeterinarioId" class="form-select">
+                    <option value="">-- Seleccione --</option>
+                </select>
+                <span asp-validation-for="VeterinarioId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="FechaHora" class="form-label">Fecha y hora</label>
+                <input asp-for="FechaHora" class="form-control" step="900" />
+                <span asp-validation-for="FechaHora" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Motivo" class="form-label">Motivo</label>
+                <input asp-for="Motivo" class="form-control" list="motivos" autocomplete="off" />
+                <datalist id="motivos">
+                    <option value="Consulta general" />
+                    <option value="Vacunación" />
+                    <option value="Desparasitación" />
+                    <option value="Control post-operatorio" />
+                    <option value="Cirugía" />
+                    <option value="Emergencia" />
+                    <option value="Baño y peluquería" />
+                </datalist>
+                <span asp-validation-for="Motivo" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar cita</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,110 @@
+﻿@model IEnumerable<SistemaDeCitasVeterinarias.Models.Cita>
+
+@{
+    ViewData["Title"] = "Citas";
+    var fechaFiltro = Context.Request.Query["fecha"].ToString();
+
+    string Badge(EstadoCita e) => e switch
+    {
+        EstadoCita.Pendiente => "bg-warning text-dark",
+        EstadoCita.Confirmada => "bg-primary",
+        EstadoCita.Atendida => "bg-success",
+        EstadoCita.Cancelada => "bg-secondary",
+        _ => "bg-light text-dark"
+    };
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Citas</h2>
+    <a asp-action="AgendarCita" class="btn btn-primary">+ Nueva cita</a>
+</div>
+
+<!-- Filtros -->
+<form method="get" class="row g-2 align-items-end mb-4">
+    <div class="col-md-3">
+        <label class="form-label">Fecha</label>
+        <input type="date" name="fecha" value="@fechaFiltro" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Veterinario</label>
+        <select name="veterinarioId" asp-items="ViewBag.Veterinarios" class="form-select">
+            <option value="">Todos</option>
+        </select>
+    </div>
+    <div class="col-md-5">
+        <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No hay citas para los filtros seleccionados.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Fecha y hora</th>
+                    <th>Mascota</th>
+                    <th>Cliente</th>
+                    <th>Veterinario</th>
+                    <th>Motivo</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@c.FechaHora.ToString("dd/MM/yyyy")</strong><br />
+                            <span class="text-muted">@c.FechaHora.ToString("HH:mm")</span>
+                        </td>
+                        <td>
+                            @c.Mascota?.Nombre
+                            <small class="text-muted d-block">@c.Mascota?.Especie</small>
+                        </td>
+                        <td>
+                            @c.Mascota?.Cliente?.Nombre
+                            <small class="text-muted d-block">@c.Mascota?.Cliente?.Telefono</small>
+                        </td>
+                        <td>@c.Veterinario?.Nombre</td>
+                        <td>@c.Motivo</td>
+                        <td><span class="badge @Badge(c.Estado)">@c.Estado</span></td>
+                        <td class="text-end">
+                            @if (c.Estado != EstadoCita.Cancelada && c.Estado != EstadoCita.Atendida)
+                            {
+                                <form asp-action="CambiarEstado" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@c.Id" />
+                                    @if (c.Estado == EstadoCita.Pendiente)
+                                    {
+                                        <button name="estado" value="@EstadoCita.Confirmada"
+                                                class="btn btn-sm btn-outline-primary">
+                                            Confirmar
+                                        </button>
+                                    }
+                                    @if (c.Estado == EstadoCita.Confirmada)
+                                    {
+                                        <button name="estado" value="@EstadoCita.Atendida"
+                                                class="btn btn-sm btn-outline-success">
+                                            Atendida
+                                        </button>
+                                    }
+                                    <button name="estado" value="@EstadoCita.Cancelada"
+                                            class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('¿Cancelar esta cita?');">
+                                        Cancelar
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
