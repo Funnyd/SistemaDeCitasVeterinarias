@@ -1,0 +1,33 @@
+@model IEnumerable<Cliente>
+@{ ViewData["Title"] = "Dueños"; }
+<div class="d-flex justify-content-between align-items-center mb-3 gap-2">
+    <h2>Dueños</h2>
+    <a asp-action="Crear" class="btn btn-primary">Registrar dueño</a>
+</div>
+<p class="text-muted">Clientes responsables de las mascotas registradas en la clínica.</p>
+@if (TempData["Mensaje"] is string mensaje)
+{
+    <div class="alert alert-success" role="status">@mensaje</div>
+}
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No hay dueños registrados. Registra uno para poder asociarlo a una mascota.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Acciones</th></tr></thead>
+            <tbody>
+            @foreach (var dueno in Model)
+            {
+                <tr>
+                    <td>@dueno.Nombre</td><td>@dueno.Telefono</td>
+                    <td>@(string.IsNullOrEmpty(dueno.Correo) ? "Sin correo" : dueno.Correo)</td>
+                    <td><a asp-controller="Mascotas" asp-action="Crear" asp-route-clienteId="@dueno.Id" class="btn btn-sm btn-outline-primary">Registrar mascota</a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

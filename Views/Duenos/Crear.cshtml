@@ -1,0 +1,35 @@
+@model RegistrarDuenoViewModel
+@{ ViewData["Title"] = "Registrar dueño"; }
+<h2 class="mb-3">Registrar dueño</h2>
+<p class="text-muted">Completa los datos de contacto del responsable de la mascota.</p>
+<div class="row"><div class="col-md-6">
+    <form asp-action="Crear" method="post">
+        <input asp-for="ParaMascota" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" maxlength="20" autocomplete="name" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Telefono" class="form-label"></label>
+            <input asp-for="Telefono" type="tel" class="form-control" maxlength="20" autocomplete="tel" />
+            <span asp-validation-for="Telefono" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Correo" class="form-label">Correo (opcional)</label>
+            <input asp-for="Correo" type="email" class="form-control" maxlength="30" autocomplete="email" />
+            <span asp-validation-for="Correo" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">@(Model.ParaMascota ? "Guardar y registrar mascota" : "Guardar dueño")</button>
+        @if (Model.ParaMascota)
+        {
+            <a asp-controller="Mascotas" asp-action="Crear" class="btn btn-outline-secondary">Cancelar</a>
+        }
+        else
+        {
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        }
+    </form>
+</div></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

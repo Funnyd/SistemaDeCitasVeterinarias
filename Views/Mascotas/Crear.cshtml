@@ -1,6 +1,10 @@
 @model Mascota
 @{ ViewData["Title"] = "Registrar mascota"; }
 <h2>Registrar mascota</h2>
+@if (TempData["Mensaje"] is string mensaje)
+{
+    <div class="alert alert-success" role="status">@mensaje</div>
+}
 <div class="row"><div class="col-md-6">
     <form asp-action="Crear" method="post">
         <partial name="_Formulario" model="Model" />

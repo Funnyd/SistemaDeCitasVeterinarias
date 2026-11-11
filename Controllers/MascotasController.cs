@@ -20,10 +20,12 @@ public class MascotasController(ContextoClinica context) : Controller
         return mascota is null ? NotFound() : View(mascota);
     }
 
-    public async Task<IActionResult> Crear()
+    public async Task<IActionResult> Crear(int? clienteId)
     {
-        await CargarClientes();
-        return View(new Mascota());
+        var seleccionado = clienteId.HasValue && await context.Clientes.AnyAsync(c => c.Id == clienteId.Value)
+            ? clienteId.Value : 0;
+        await CargarClientes(seleccionado);
+        return View(new Mascota { ClienteId = seleccionado });
     }
 
     [HttpPost, ValidateAntiForgeryToken]

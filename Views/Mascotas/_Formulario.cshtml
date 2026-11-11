@@ -22,7 +22,7 @@
         <option value="">-- Seleccione un cliente --</option>
     </select>
     <span asp-validation-for="ClienteId" class="text-danger"></span>
-    <div class="form-text">El cliente debe estar registrado previamente en la base de datos.</div>
+    <div class="form-text">¿El dueño aún no está registrado? <a asp-controller="Duenos" asp-action="Crear" asp-route-paraMascota="true">Registrar dueño</a>. Al terminar volverás a un formulario nuevo de mascota.</div>
 </div>
 <button type="submit" class="btn btn-primary">Guardar mascota</button>
 <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
