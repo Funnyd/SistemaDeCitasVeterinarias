@@ -22,6 +22,8 @@ public class Mascota
     [Required]
     public string Especie { get; set; } = "";   // Perro, Gato, Ave...
     public string? Raza { get; set; }
+    [Range(1, int.MaxValue, ErrorMessage = "Seleccione un cliente.")]
+    public int ClienteId { get; set; }
     public Cliente? Cliente { get; set; }
     public List<Cita> Citas { get; set; } = new();
 }

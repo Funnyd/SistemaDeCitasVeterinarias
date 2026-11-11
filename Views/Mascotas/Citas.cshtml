@@ -1,0 +1,24 @@
+@model Mascota
+@{ ViewData["Title"] = "Citas de " + Model.Nombre; }
+<h2>Citas de @Model.Nombre</h2>
+<p>Cliente: @Model.Cliente?.Nombre · Especie: @Model.Especie</p>
+@if (Model.Citas.Count == 0)
+{
+    <div class="alert alert-info">Esta mascota no tiene citas registradas.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead><tr><th>Fecha y hora</th><th>Veterinario</th><th>Motivo</th><th>Estado</th></tr></thead>
+            <tbody>
+            @foreach (var cita in Model.Citas.OrderBy(c => c.FechaHora))
+            {
+                <tr><td>@cita.FechaHora.ToString("dd/MM/yyyy HH:mm")</td><td>@cita.Veterinario?.Nombre</td><td>@cita.Motivo</td><td>@cita.Estado</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+<a asp-action="Index" class="btn btn-outline-secondary">Volver a mascotas</a>
+<a asp-controller="Citas" asp-action="AgendarCita" class="btn btn-primary">Nueva cita</a>
